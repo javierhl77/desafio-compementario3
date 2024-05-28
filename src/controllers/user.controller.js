@@ -43,19 +43,7 @@ class UserController {
         
              //const nuevoUsuario = await userRepository.RegisterUser({first_name, last_name, email, password, age})
             
-        const token = jwt.sign({ user: nuevoUsuario }, "coderhouse", {
-                expiresIn: "1h"
-            }); 
-
-            res.cookie("coderCookieToken", token, {
-                maxAge: 3600000,
-                httpOnly: true
-            });
- 
-            res.redirect("/api/users/profile");
-    
-
-        
+   
     }
 
     async login(req, res) {
@@ -74,20 +62,21 @@ class UserController {
                 return res.status(401).send("Contraseña incorrecta");
             }
 
-            const token = jwt.sign({ user: usuarioEncontrado }, "coderhouse", {
+             const token = jwt.sign({ user: usuarioEncontrado }, "coderhouse", {
                 expiresIn: "1h"
             });
 
             res.cookie("coderCookieToken", token, {
                 maxAge: 3600000,
                 httpOnly: true
-            });
+            }); 
 
-            res.redirect("/api/users/profile");
+            res.redirect("/api/users/profile"); 
         } catch (error) {
             console.error(error);
             res.status(500).send("Error interno del servidor");
         }
+       
     }
 
     async profile(req, res) {

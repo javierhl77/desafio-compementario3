@@ -4,7 +4,7 @@
 <h1>Mi Perfil</h1>
 
 <div class="profile-card">
-  <p>Bienvenido, {{user.nombre}} {{user.apellido}}!</p>
+  <p>Bienvenido, {{req.user.first_name}} {{req.user.last_name}}!</p>
   <p>Rol: {{user.role}}</p>
 
   <form action="/api/users/logout" method="POST">
@@ -17,4 +17,4 @@
     <a class="btnMios" href="/chat">Chat en vivo</a>
     <a class="btnMios" href="/products">Tienda</a>
   {{/if}}
-</div>
+</div>  

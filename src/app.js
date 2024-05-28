@@ -8,7 +8,9 @@ const productsRouter = require("./routes/product.router.js");
 const cartsRouter = require ("./routes/carts.router.js");
 const userRouter = require("./routes/user.router.js");
 const viewsRouter = require("./routes/views.router");
-
+const passport = require("passport");
+const initializePassport = require("./config/passport.config.js");
+const cookieParser = require("cookie-parser");
 require("./database.js");
 
 const nodemailer = require("nodemailer");
@@ -23,7 +25,14 @@ app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");
 app.set("views", "./src/views");
 
-//
+//passport
+app.use(passport.initialize());
+initializePassport();
+app.use(cookieParser());
+
+/* //AuthMiddleware
+const authMiddleware = require("./middleware/authmiddleware.js");
+app.use(authMiddleware); */
 
 
 //middleware
