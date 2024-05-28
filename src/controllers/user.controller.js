@@ -81,8 +81,9 @@ class UserController {
 
     async profile(req, res) {
         //Con DTO: 
-        const userDto = new UserDTO(req.first_name, req.last_name, req.role);
-        const isAdmin = req.role === 'admin';
+        const user = req.user;
+        const userDto = new UserDTO(req.user.first_name, req.user.last_name, req.user.role);
+        const isAdmin = user.role === 'admin';
         res.render("profile", { user: userDto, isAdmin });
     }
 
@@ -92,7 +93,7 @@ class UserController {
     }
 
     async admin(req, res) {
-        if (req.role !== "admin") {
+        if (user.role !== "admin") {
             return res.status(403).send("Acceso denegado");
         }
         res.render("admin");
