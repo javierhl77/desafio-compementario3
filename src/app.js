@@ -115,7 +115,9 @@ app.get("/register", (req,res) => {
 app.get("/login", (req,res) => {
     res.render("login");
 })
-
+app.get("/realtimeproducts", (req,res) => {
+    res.render("realtimeproducts");
+})
 
 //guardar una referencia de express 
 const httpServer = app.listen(PUERTO, () => {
@@ -149,3 +151,5 @@ io.on("connection",  (socket) => {
     })
 })
 
+const SocketManager = require("./websocket/socketmanager.js");
+new SocketManager(httpServer);
