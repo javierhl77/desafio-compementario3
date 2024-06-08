@@ -25,24 +25,34 @@ class productController {
         }
     }
     async listarProductosPorId (req,res) {
+        const id = req.params.pid;
         try {
-            
+            const producto = await ProductRepository.getById(id);
+            if(!producto){
+                return res.json({error: "producto no encontrado"})
+            }
+            res.json(producto)
         } catch (error) {
             res.status(500).send("error")
         }
     }
     async actualizarProducto (req,res) {
+        const id = req.params.pid;
+        const productoActualizado = req.body;
         try {
-            
+            const productoA = await ProductRepository.updateProducts(id,productoActualizado);
+            res.json(productoA);
         } catch (error) {
-            res.status(500).send("error")
+            res.status(500).send("error al actualizar producto");
         }
     }
     async eliminarProducto (req,res) {
+        const id = req.params.pid;
         try {
-            
+            const productoE = await ProductRepository.deleteProd(id);
+            res.json(productoE,"producto eliminado")
         } catch (error) {
-            res.status(500).send("error")
+            res.status(500).send("error al eliminar producto")
         }
     }
 }

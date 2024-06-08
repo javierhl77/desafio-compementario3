@@ -2,22 +2,26 @@
 
 const express = require("express");
 const router = express.Router();
-const CartController = require("../controllers/cart.controller.js");
-const cartController = new CartController();
+
+const CartRepository = require("../repositories/cart.repository.js");
+const cartRepository = new CartRepository();
+
 const cartModel = require("../models/cart.model.js");
 
-const ProductController = require("../controllers/product.controller.js");
-const productController = new ProductController();
+
+
 
 const productRepository = require("../repositories/product.repository.js");
 const ProductRepository = new productRepository();
 
-/*  const ProductManager = require("../controllers/product-manager-db.js");
+const checkUserRole = require("../middleware/checkrole.js");
+const passport = require("passport");
 
-const productManager = new ProductManager(); */
 
 
-router.get("/products", async (req, res) => {
+router.get("/products", async (req,res) => {
+
+   //const cartId = req.user.cart.toString();
    try {
       const { limit = 2 ,page = 1 } = req.query;
       const productos = await ProductRepository.getAll({
@@ -27,9 +31,9 @@ router.get("/products", async (req, res) => {
 
       const nuevoArray = productos.docs.map(producto => {
          const { _id, ...rest } = producto.toObject();
-         return rest;
+         return { id: _id, ...rest };
       });
-
+     
       
       res.render("products", {
          productos: nuevoArray,
@@ -38,7 +42,8 @@ router.get("/products", async (req, res) => {
          prevPage: productos.prevPage,
          nextPage: productos.nextPage,
          currentPage: productos.page,
-         totalPages: productos.totalPages
+         totalPages: productos.totalPages,
+         //cartId
       });
 
    } catch (error) {
