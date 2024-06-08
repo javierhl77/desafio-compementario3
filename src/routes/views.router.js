@@ -2,38 +2,28 @@
 
 const express = require("express");
 const router = express.Router();
-
-const CartRepository = require("../repositories/cart.repository.js");
-const cartRepository = new CartRepository();
-
 const cartModel = require("../models/cart.model.js");
-
-
-
-
 const productRepository = require("../repositories/product.repository.js");
 const ProductRepository = new productRepository();
 
-const checkUserRole = require("../middleware/checkrole.js");
 const passport = require("passport");
 
+router.get("/products", passport.authenticate('jwt', { session: false }), async (req,res) => {
 
-
-router.get("/products", async (req,res) => {
-
-   //const cartId = req.user.cart.toString();
+ 
    try {
       const { limit = 2 ,page = 1 } = req.query;
       const productos = await ProductRepository.getAll({
          page: parseInt(page),
          limit: parseInt(limit)
       });
-
+   
       const nuevoArray = productos.docs.map(producto => {
          const { _id, ...rest } = producto.toObject();
          return { id: _id, ...rest };
       });
-     
+
+     const cartId = req.user.cart.toString();
       
       res.render("products", {
          productos: nuevoArray,
@@ -43,7 +33,7 @@ router.get("/products", async (req,res) => {
          nextPage: productos.nextPage,
          currentPage: productos.page,
          totalPages: productos.totalPages,
-         //cartId
+         cartId
       });
 
    } catch (error) {

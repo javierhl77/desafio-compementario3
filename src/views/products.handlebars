@@ -4,7 +4,7 @@
 
 <div>
     <h1> Productos </h1>
-    <a href="/carts/{{cartId}}"></a>
+     <a href="/carts/{{cartId}}">carrito</a>
 </div>
   
 {{#each productos}}
@@ -14,11 +14,11 @@
     <p>Price: ${{price}}</p>
     <p>Category: {{category}} </p>
 
-    <form action="/api/carts/{{..cartId}}/product/{{id}}" method="POST"> 
+    <form action="/api/carts/{{../cartId}}/product/{{id}}" method="POST"> 
       <button class="btnMios" type="submit">Agregar al Carrito</button>
     </form>
 
-    {{!-- <button> Agregar al Carrito </button> --}}
+    {{!-- <button> Agregar al Carrito </button> --}} 
 </div>
 {{/each}}
 
