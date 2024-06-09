@@ -38,14 +38,14 @@ class CartController {
 
     try {
         await cartRepository.AddProductsCart(cartId, productoId, quantity);
-
-        const carritoID = (req.user.cart).toString();
-        res.redirect(`/carts/${carritoID}`)
+         res.send("producto agregado con exito!");
+        //const carritoID = (req.user.cart).toString();
+        //res.redirect(`/carts/${carritoID}`);
         
-        res.send("producto Agregado");
         
-    } catch (error) {
-      res.status(500).send("error")
+        
+      } catch (error) {
+      res.status(500).send("error errorrrrrrrr")
     }
   }
 
