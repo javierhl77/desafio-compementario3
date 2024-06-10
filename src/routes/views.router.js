@@ -58,16 +58,23 @@ router.get("/carts/:cid", async (req, res) => {
          console.log("No existe ese carrito con el id");
          return res.status(404).json({ error: "Carrito no encontrado" });
       }
-
-      const productosEnCarrito = carrito.products.map(item => ({
-         product: item.product.toObject(),
-         quantity : item.quantity,
+      let totalCompra = 0;
+      const productosEnCarrito = carrito.products.map(item => {
+        const product = item.product.toObject();
+        const quantity = item.quantity;
+        const totalPrice = product.price * quantity;
+        totalCompra += totalPrice;
+        return {
+         product: { ...product, totalPrice},
+         quantity,
          cartId
-      })
+        };
+         
+      }
    );
 
 
-      res.render("carts", { productos : productosEnCarrito, cartId });
+      res.render("carts", { productos : productosEnCarrito, totalCompra, cartId });
    } catch (error) {
       console.error("Error al obtener el carrito", error);
       res.status(500).json({ error: "Error interno del servidor" });
