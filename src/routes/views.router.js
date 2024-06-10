@@ -61,12 +61,13 @@ router.get("/carts/:cid", async (req, res) => {
 
       const productosEnCarrito = carrito.products.map(item => ({
          product: item.product.toObject(),
-         quantity : item.quantity
+         quantity : item.quantity,
+         cartId
       })
    );
 
 
-      res.render("carts", { productos : productosEnCarrito });
+      res.render("carts", { productos : productosEnCarrito, cartId });
    } catch (error) {
       console.error("Error al obtener el carrito", error);
       res.status(500).json({ error: "Error interno del servidor" });

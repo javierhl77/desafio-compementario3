@@ -6,6 +6,25 @@
   <div>
     <p>Producto: {{this.product.title}}</p>
     <p>Cantidad: {{this.quantity}}</p>
-    <button type="submit">Eliminar</button>
+    {{!-- <button type="submit">Eliminar</button> --}}
+    <button type="button" onclick="eliminarProducto('{{this.cartId}}'), '{{this.product._id}}' ">eliminar</button>
+
   </div>
 {{/each}}
+
+<script>
+  function eliminarProducto(cartId, productoId) {
+    fetch(`/api/carts/${cartId}/product/${productoId}` , {
+      method:'DELETE'
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('error al eliminar producto');
+        }
+        location.reload();
+      })
+      .catch(error => {
+        console.error(error);
+      })
+  }
+</script>
