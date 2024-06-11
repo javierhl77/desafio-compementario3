@@ -74,6 +74,7 @@ router.get("/carts/:cid", async (req, res) => {
    );
 
 
+
       res.render("carts", { productos : productosEnCarrito, totalCompra, cartId });
    } catch (error) {
       console.error("Error al obtener el carrito", error);
