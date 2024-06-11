@@ -81,7 +81,26 @@ class mongoCartDao {
     }
 
     async actualizarCantidadesEnCarrito(cartId, productId, newQuantity) {
+
+
         try {
+            const result = await CartModel.updateOne(
+              { _id: cartId, "products.product": productId },
+              { $set: { "products.$.quantity": newQuantity } }
+            );
+        
+            if (result.modifiedCount === 0) {
+              console.log("No se encontró el producto en el carrito");
+              return null;
+            }
+        
+            return await CartModel.findById(cartId);
+          } catch (error) {
+            throw new Error("Error al actualizar la cantidad del producto en el carrito");
+          }
+
+        ///////////////////////////////////////////
+        /* try {
             const carrito = await CartModel.findById(cartId);
             if(!carrito){
                 console.log("no existe carrito")
@@ -97,7 +116,10 @@ class mongoCartDao {
 
         } catch (error) {
             throw new  error("error")
-        }
+        } */
+        ///////////////////////////////////////////////////////////////
+
+
     }
 
     async vaciarCarrito(cartId) {
