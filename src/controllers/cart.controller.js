@@ -39,8 +39,7 @@ class CartController {
     try {
         await cartRepository.AddProductsCart(cartId, productoId, quantity);
          res.send("producto agregado con exito!");
-        //const carritoID = (req.user.cart).toString();
-        //res.redirect(`/carts/${carritoID}`);
+       
         
         
         
