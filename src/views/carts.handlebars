@@ -1,76 +1,136 @@
 
+{{!--   
+<h1 class="text-center">Carrito de Compras</h1>
 
-<h1>CARRITO DE COMPRAS</h1>
+<div class="container">
+    {{#each productos}}
+    <div class="card mb-3">
+        <div class="card-body">
 
-{{#each productos}}
-<div class="product-item">
-  <p>Producto: {{this.product.title}}</p>
-  <p>Cantidad: {{this.quantity}}</p>
-  <p>Precio: ${{this.product.totalPrice}}</p>
-  <form class="update-quantity-form" data-cartid="{{this.cartId}}" data-productid="{{this.product._id}}">
-    <label for="quantity">Cantidad:</label>
-    <input type="number" id="quantity" name="quantity" min="1" value="{{this.quantity}}" required>
-    <button onclick="actualizarCantidades('{{this.cartId}}','{{this.product._id}}' )">ActualizarCantidad</button>
-  </form>
-  <button onclick="eliminarProducto('{{this.cartId}}','{{this.product._id}}')">Eliminar</button>
+
+            <h5 class="card-title">Producto: {{this.product.title}}</h5>
+            <p class="card-text">Cantidad: {{this.quantity}}</p>
+            <p class="card-text">Precio: ${{this.product.totalPrice}}</p>
+
+
+            <button onclick="eliminarProducto('{{this.cartId}}', '{{this.product._id}}')"
+                class="btn btn-danger">Eliminar</button>
+        </div>
+    </div>
+    {{/each}}
 </div>
-{{/each}}
 
- <script>
-  function eliminarProducto(cartId, productoId) {
-    fetch(`/api/carts/${cartId}/product/${productoId}` , {
-      method:'DELETE'
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('error al eliminar producto');
-        }
-        location.reload();
-      })
-      .catch(error => {
-        console.error(error);
-      })
-  }
+<button onclick="vaciarCarrito('{{cartId}}')" class="btn btn-danger">Vaciar Carrito</button>
+<h3 class="mt-2">Total de la compra: ${{totalCompra}}</h3>
+{{!-- Organizar en un módulo en PUBLIC/JS --}}
+<script>
+    function eliminarProducto(cartId, productId) {
+        fetch(`/api/carts/${cartId}/product/${productId}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al eliminar el producto del carrito');
+                }
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
 
-  function actualizarCantidades(cartId, productId){
-    const quantity = document.querySelector(`[data-cartid="${cartId}"][data-productid="${productId}]`)
+    function vaciarCarrito(cartId) {
+        fetch(`/api/carts/${cartId}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al vaciar el carrito');
+                }
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script> --}}
 
-  
-  
 
 
+/////////////////////////////////
+<h1 class="text-center">Carrito de Compras</h1>
 
-/////////////////////////////////////////////////////////////////////////////////
-      document.querySelectorAll('.update-quantity-form').forEach(form => {
-      form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const form = event.target;
-      const cartId = form.dataset.cartid;
-      const productId = form.dataset.productid;
-      const newQuantity = form.querySelector('#quantity').value;
+<div class="container">
+    {{#each productos}}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Producto: {{this.product.title}}</h5>
+            <div class="d-flex align-items-center">
+                <p class="card-text me-2">Cantidad:</p>
+                <input type="number" class="form-control quantity-input" value="{{this.quantity}}" min="1" data-product-id="{{this.product._id}}" style="max-width: 80px;">
+                <button onclick="actualizarCantidad('{{this.cartId}}', '{{this.product._id}}')" class="btn btn-primary ms-2">Actualizar</button>
+            </div>
+            <p class="card-text">Precio: ${{this.product.totalPrice}}</p>
+            <button onclick="eliminarProducto('{{this.cartId}}', '{{this.product._id}}')" class="btn btn-danger">Eliminar</button>
+        </div>
+    </div>
+    {{/each}}
+</div>
 
-      try {
-        const response = await fetch(`/api/carts/${cartId}/product/${productId}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ quantity: newQuantity })
-        });
+<button onclick="vaciarCarrito('{{cartId}}')" class="btn btn-danger">Vaciar Carrito</button>
+<h3 class="mt-2">Total de la compra: ${{totalCompra}}</h3>
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data.message);
-          location.reload();
-        } else {
-          console.error('Error al actualizar la cantidad del producto');
-        }
-      } catch (error) {
-        console.error('Error al hacer la solicitud:', error);
-      }
-    });
-  });
+{{!-- Organizar en un módulo en PUBLIC/JS --}}
+<script>
+    function eliminarProducto(cartId, productId) {
+        fetch(`/api/carts/${cartId}/product/${productId}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al eliminar el producto del carrito');
+                }
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
 
-  
-     
-</script>  
+    function vaciarCarrito(cartId) {
+        fetch(`/api/carts/${cartId}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al vaciar el carrito');
+                }
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function actualizarCantidad(cartId, productId) {
+        const quantityInput = document.querySelector(`[data-product-id="${productId}"]`);
+        const newQuantity = parseInt(quantityInput.value);
+
+        fetch(`/api/carts/${cartId}/product/${productId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ quantity: newQuantity })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al actualizar la cantidad del producto');
+                }
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
