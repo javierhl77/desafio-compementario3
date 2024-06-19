@@ -37,7 +37,19 @@ const userSchema = mongoose.Schema({
         type: String,
         enum: ['admin', 'user'],
         default: 'user'
-    }
+    },
+
+
+    /// 4ta integradora:
+    documents: [{
+        name: String,
+        reference: String
+      }],
+      last_connection: {
+         type: Date,
+         default: Date.now
+      }
+
 });
 
 const UserModel = mongoose.model("users", userSchema);
